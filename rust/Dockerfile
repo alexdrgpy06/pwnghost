@@ -94,16 +94,15 @@ COPY --from=builder /build/target/armv7-unknown-linux-gnueabihf/release/pwnghost
 COPY --from=builder /build/target/arm-unknown-linux-gnueabihf/release/pwnghost /usr/local/bin/pwnghost-armv6
 
 # Auto-detect architecture and execute appropriate binary
-RUN cat > /usr/local/bin/pwnghost << 'EOF'
-#!/bin/bash
-ARCH=$(uname -m)
-case "$ARCH" in
-    aarch64|arm64) exec /usr/local/bin/pwnghost-aarch64 "$@" ;;
-    armv7l|armv7)  exec /usr/local/bin/pwnghost-armv7 "$@" ;;
-    armv6l|armv6)  exec /usr/local/bin/pwnghost-armv6 "$@" ;;
-    *) echo "Unsupported architecture: $ARCH"; exit 1 ;;
-esac
-EOF
+RUN printf '%s\n' '#!/bin/bash' \
+    'ARCH=$(uname -m)' \
+    'case "$ARCH" in' \
+    '    aarch64|arm64) exec /usr/local/bin/pwnghost-aarch64 "$@" ;;' \
+    '    armv7l|armv7)  exec /usr/local/bin/pwnghost-armv7 "$@" ;;' \
+    '    armv6l|armv6)  exec /usr/local/bin/pwnghost-armv6 "$@" ;;' \
+    '    *) echo "Unsupported architecture: $ARCH"; exit 1 ;;' \
+    'esac' \
+    > /usr/local/bin/pwnghost
 RUN chmod +x /usr/local/bin/pwnghost
 
 # Copy config example
