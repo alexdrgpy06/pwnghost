@@ -40,7 +40,7 @@ ENV PKG_CONFIG_ALLOW_CROSS=1
 ENV CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc
 
 # Copy Cargo files first for caching
-COPY Cargo.toml Cargo.lock ./
+COPY Cargo.toml ./
     
 # Create dummy source to cache dependencies
 RUN mkdir -p src && echo 'fn main() {}' > src/main.rs && cargo build --release 2>/dev/null || true
