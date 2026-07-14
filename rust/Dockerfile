@@ -25,6 +25,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && dpkg --add-architecture arm64 \
     && apt-get update && apt-get install -y --no-install-recommends \
     libdbus-1-dev:arm64 \
+    libpcap-dev:arm64 \
     && rm -rf /var/lib/apt/lists/*
 
 # Add Rust targets
