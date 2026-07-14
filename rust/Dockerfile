@@ -37,19 +37,19 @@ RUN rustup target add \
     arm-unknown-linux-gnueabihf
 
 # Configure cargo for cross-compilation
-RUN mkdir -p /root/.cargo && cat > /root/.cargo/config.toml << 'EOF'
-[target.aarch64-unknown-linux-gnu]
-linker = "aarch64-linux-gnu-gcc"
-
-[target.armv7-unknown-linux-gnueabihf]
-linker = "arm-linux-gnueabihf-gcc"
-
-[target.arm-unknown-linux-gnueabihf]
-linker = "arm-linux-gnueabihf-gcc"
-
-[build]
-rustflags = ["-C", "link-arg=-Wl,--as-needed"]
-EOF
+RUN mkdir -p /root/.cargo && printf '%s\n' \
+    '[target.aarch64-unknown-linux-gnu]' \
+    'linker = "aarch64-linux-gnu-gcc"' \
+    '' \
+    '[target.armv7-unknown-linux-gnueabihf]' \
+    'linker = "arm-linux-gnueabihf-gcc"' \
+    '' \
+    '[target.arm-unknown-linux-gnueabihf]' \
+    'linker = "arm-linux-gnueabihf-gcc"' \
+    '' \
+    '[build]' \
+    'rustflags = ["-C", "link-arg=-Wl,--as-needed"]' \
+    > /root/.cargo/config.toml
 
 # Allow cross-compilation without pkg-config sysroot
 ENV PKG_CONFIG_ALLOW_CROSS=1
