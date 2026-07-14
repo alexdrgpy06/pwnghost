@@ -5,9 +5,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: docker buildx build -t pwnghost-rootfs -f rust/Dockerfile --target runtime --load .
+      - run: docker buildx build -t pwnghost-rootfs -f Dockerfile --target runtime --load rust/
       - run: docker export $(docker create pwnghost-rootfs) | gzip > rootfs.tar.gz
-      - run: docker run --rm --privileged -v $PWD:/src pwnghost-rootfs bash -c "
+      - run: cp rootfs.tar.gz rust/ && cd rust && docker run --rm --privileged -v $PWD/..:/src pwnghost-rootfs bash -c "
           apt-get update -qq && apt-get install -y -qq python3 parted e2fsprogs dosfstools kpartx curl 2>&1 | tail -1
           && python3 /src/scripts/make-image.py"
       - uses: actions/upload-artifact@v4
