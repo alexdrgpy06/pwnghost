@@ -105,9 +105,6 @@ RUN printf '%s\n' '#!/bin/bash' \
     > /usr/local/bin/pwnghost
 RUN chmod +x /usr/local/bin/pwnghost
 
-# Copy config example
-COPY pi_config.toml.example /etc/pwnghost/config.toml.example
-
 # Health check
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
     CMD pgrep -x pwnghost > /dev/null || exit 1
