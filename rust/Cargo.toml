@@ -1,8 +1,8 @@
 [package]
-name = "oxigotchi"
+name = "pwnghost"
 version = "3.3.6"
-edition = "2024"
-description = "Rusty Oxigotchi — the Rust-forged WiFi capture bull for Pi Zero 2W"
+edition = "2021"
+description = "PwnGhost — the Rust-forged WiFi capture daemon for Pi Zero 2W"
 license = "GPL-3.0"
 
 [dependencies]
@@ -27,11 +27,24 @@ zip = { version = "2", default-features = false, features = ["deflate"] }
 libc = "0.2"
 
 [target.'cfg(target_os = "linux")'.dependencies]
-dbus = "0.9"
-dbus-crossroads = "0.5"
+dbus = { version = "0.9", default-features = false, features = [], optional = true }
+dbus-crossroads = { version = "0.5", optional = true }
 
+# aarch64 only (Pi Zero 2W 64-bit)
 [target.'cfg(target_arch = "aarch64")'.dependencies]
 rppal = "0.22"
+
+# 32-bit ARM (Pi Zero 2W 32-bit + Pi Zero W)
+[target.'cfg(target_arch = "arm")'.dependencies]
+linux-embedded-hal = "0.2"
+spidev = "0.4"
+sysfs_gpio = "0.6"
+i2cdev = "0.6"
+
+# dbus optional for cross-compilation without pkg-config
+[features]
+default = []
+with-dbus = ["dbus", "dbus-crossroads"]
 
 [dev-dependencies]
 tower = { version = "0.5", features = ["util"] }
