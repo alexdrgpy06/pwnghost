@@ -5,6 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - run: echo "CACHE_KEY=$(sha256sum rust/Cargo.lock | cut -d' ' -f1)" >> $GITHUB_ENV
       - run: docker buildx build -t pwnghost-rootfs --target runtime --load rust/
       - run: docker export $(docker create pwnghost-rootfs) | gzip > rootfs.tar.gz
       - run: cp rootfs.tar.gz rust/ && cd rust && docker run --rm --privileged -v $PWD/..:/src pwnghost-rootfs bash -c "
